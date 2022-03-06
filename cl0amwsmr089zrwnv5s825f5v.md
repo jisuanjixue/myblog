@@ -273,3 +273,173 @@ return this.size
 }
 }
 ``` 
+# Tree
+## binary tree
+
+Trees have many structures. Binary tree is the most commonly used structure in trees, and it is also a natural recursive structure.
+
+A binary tree has a root node, and each node has at most two child nodes: the left node and the right node. The bottom node of the tree is called a leaf node. When the number of leaves of a tree is full, the tree can be called a full binary tree.
+
+![163884f74c9f4e4d.webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1646533549895/vJ4VTjXv0.webp)
+
+## binary search tree
+
+A binary search tree is also a binary tree and has the characteristics of a binary tree. But the difference is that the value of each node of the binary search tree is larger than the value of its left subtree and smaller than the value of the right subtree.
+
+This storage method is very suitable for data search. As shown in the figure below, when 6 needs to be searched, because the value to be searched is larger than the value of the root node, it only needs to be searched on the right subtree of the root node, which greatly improves the search efficiency.
+
+## accomplish
+
+class Node {
+  constructor(value) {
+    this.value = value
+    this.left = null
+    this.right = null
+  }
+}
+class BST {
+  constructor() {
+    this.root = null
+    this.size = 0
+  }
+  getSize() {
+    return this.size
+  }
+  isEmpty() {
+    return this.size === 0
+  }
+  addNode(v) {
+    this.root = this._addChild(this.root, v)
+  }
+  // When adding a node, you need to compare the added node value with the current
+ // size of node value
+  _addChild(node, v) {
+    if (!node) {
+      this.size++
+      return new Node(v)
+    }
+    if (node.value > v) {
+      node.left = this._addChild(node.left, v)
+    } else if (node.value < v) {
+      node.right = this._addChild(node.right, v)
+    }
+    return node
+  }
+}
+
+The above is the most basic binary search tree implementation, and then the tree traversal is implemented.
+
+For tree traversal, there are three traversal methods, namely pre-order traversal, in-order traversal, and post-order traversal. The difference between the three traversals is when the nodes are visited. In the process of traversing the tree, each node will be traversed three times, traversing to itself, traversing the left subtree and traversing the right subtree. If you need to implement preorder traversal, you only need to do the operation when the node is traversed for the first time.
+
+
+```
+// Preorder traversal can be used to print the structure of the tree
+// Preorder traversal first visits the root node, then the left node, and finally the right node.
+preTraversal() {
+  this._pre(this.root)
+}
+_pre(node) {
+  if (node) {
+    console.log(node.value)
+    this._pre(node.left)
+    this._pre(node.right)
+  }
+}
+// Inorder traversal can be used for sorting
+// For BST, in-order traversal can be implemented in one traversal
+// get sorted values
+// Inorder traversal means visiting the left node first, then the root node, and finally the right node.
+midTraversal() {
+  this._mid(this.root)
+}
+_mid(node) {
+  if (node) {
+    this._mid(node.left)
+    console.log(node.value)
+    this._mid(node.right)
+  }
+}
+// Postorder traversal can be used to manipulate child nodes first
+// Re-manipulate the scene of the parent node
+// Postorder traversal means visiting the left node first, then the right node, and finally the root node.
+backTraversal() {
+  this._back(this.root)
+}
+_back(node) {
+  if (node) {
+    this._back(node.left)
+    this._back(node.right)
+    console.log(node.value)
+  }
+}
+``` 
+The above types of traversal can be called depth traversal, and the corresponding traversal is called breadth traversal, which is to traverse the tree layer by layer. For breadth traversal, we need to use the queue structure mentioned earlier.
+
+
+```
+breadthTraversal() {
+  if (!this.root) return null
+  let q = new Queue()
+ // enqueue the root node
+
+  q.enQueue(this.root)
+ // Loop to determine whether the queue is empty, it is empty
+// Indicates that the tree traversal is complete
+
+  while (!q.isEmpty()) {
+    // Dequeue the team leader to determine whether there are left and right subtrees
+// If there is, enter the queue from left to right
+
+    let n = q.deQueue()
+    console.log(n.value)
+    if (n.left) q.enQueue(n.left)
+    if (n.right) q.enQueue(n.right)
+  }
+}
+``` 
+Next, we will introduce how to find the minimum or maximum number in a tree. Because of the characteristics of binary search trees, the minimum value must be at the far left of the root node, and the maximum value is opposite.
+
+
+```
+getMin() {
+  return this._getMin(this.root).value
+}
+_getMin(node) {
+  if (!node.left) return node
+  return this._getMin(node.left)
+}
+getMax() {
+  return this._getMax(this.root).value
+}
+_getMax(node) {
+  if (!node.right) return node
+  return this._getMin(node.right)
+}
+``` 
+
+Rounding up and rounding down, these two operations are opposite, so the code is also similar, here only how to round down. Since it is rounded down, then according to the characteristics of the binary search tree, the value must be on the left side of the root node. Just keep traversing the left subtree until the value of the current node is no longer greater than or equal to the required value, and then determine whether the node still has the right subtree. If there is, continue the recursive judgment above.
+
+
+```
+floor(v) {
+  let node = this._floor(this.root, v)
+  return node ? node.value : null
+}
+_floor(node, v) {
+  if (!node) return null
+  if (node.value === v) return v
+// If the current node value is still greater than the required value, continue the recursion
+
+  if (node.value > v) {
+    return this._floor(node.left, v)
+  }
+
+// Determine if the current node has the right subtree
+  let right = this._floor(node.right, v)
+  if (right) return right
+  return node
+}
+``` 
+
+
+
