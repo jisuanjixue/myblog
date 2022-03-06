@@ -273,7 +273,9 @@ return this.size
 }
 }
 ``` 
+
 # Tree
+
 ## binary tree
 
 Trees have many structures. Binary tree is the most commonly used structure in trees, and it is also a natural recursive structure.
