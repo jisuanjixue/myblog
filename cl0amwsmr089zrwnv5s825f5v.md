@@ -419,7 +419,7 @@ _getMax(node) {
 }
 ``` 
 
-Rounding up and rounding down, these two operations are opposite, so the code is also similar, here only how to round down. Since it is rounded down, then according to the characteristics of the binary search tree, the value must be on the left side of the root node. Just keep traversing the left subtree until the value of the current node is no longer greater than or equal to the required value, and then determine whether the node still has the right subtree. If there is, continue the recursive judgment above.
+**Rounding up and rounding down**, these two operations are opposite, so the code is also similar, here only how to round down. Since it is rounded down, then according to the characteristics of the binary search tree, the value must be on the left side of the root node. Just keep traversing the left subtree until the value of the current node is no longer greater than or equal to the required value, and then determine whether the node still has the right subtree. If there is, continue the recursive judgment above.
 
 
 ```
@@ -442,6 +442,124 @@ _floor(node, v) {
   return node
 }
 ``` 
+Rank, which is used to get the rank of a given value or the value of the node with the rank. These two operations are also opposite, so this only introduces how to get the value of the node with the rank. For this operation, we need to modify the code slightly so that each node has a size property. This property indicates how many child nodes (including itself) are under this node.
+
+
+```
+class Node {
+constructor(value) {
+this.value = value
+this.left = null
+this.right = null
+// modify the code
+this.size = 1
+}
+}
+// add code
+_getSize(node) {
+return node ? node.size : 0
+}
+_addChild(node, v) {
+if (!node) {
+return new Node(v)
+}
+if (node.value > v) {
+// modify the code
+node.size++
+node.left = this._addChild(node.left, v)
+} else if (node.value < v) {
+// modify the code
+node.size++
+node.right = this._addChild(node.right, v)
+}
+return node
+}
+select(k) {
+let node = this._select(this.root, k)
+return node ? node.value : null
+}
+_select(node, k) {
+if (!node) return null
+// First get a few nodes under the left subtree
+let size = node.left ? node.left.size : 0
+// Determine if size is greater than k
+// If it is greater than k, it means the desired node is on the left node
+if (size > k) return this._select(node.left, k)
+// If it is less than k, it means the desired node is on the right node
+// Note that k needs to be recalculated here, minus the number of nodes in the root node except the right subtree
+if (size < k) return this._select(node.right, k - size - 1)
+return node
+}
+
+``` 
+
+The next step is to explain the most difficult part of binary search trees: deleting nodes. Because for deleting nodes, there will be the following situations
+
+- The node that needs to be deleted has no subtree
+- The node to be deleted has only one subtree
+- The node to be deleted has two left and right trees
+
+It is easy to solve the first two cases, but the third case is difficult, so let’s implement a relatively simple operation first: delete the smallest node, for deleting the smallest node, there is no third case, delete the largest node The node operation is the opposite of deleting the smallest node, so it will not be repeated here.
+
+
+```
+delectMin() {
+this.root = this._delectMin(this.root)
+console.log(this.root)
+}
+_delectMin(node) {
+// keep recursing on the left subtree
+// If the left subtree is empty, determine whether the node has the right subtree
+// If there is a right subtree, replace the node to be deleted with the right subtree
+if ((node ​​!= null) & !node.left) return node.right
+node.left = this._delectMin(node.left)
+// Finally, the `size` of the next node needs to be re-maintained
+node.size = this._getSize(node.left) + this._getSize(node.right) + 1
+return node
+}
+``` 
+The last thing to explain is how to delete any node. For this operation, T. Hibbard in 1962 proposed a solution to this problem, that is, how to solve the third case.
+
+When this happens, the successor node of the current node (that is, the smallest node of the right subtree of the current node) needs to be taken out to replace the node that needs to be deleted. Then assign the left subtree of the node to be deleted to the successor node, and assign the right subtree to it after deleting the successor node.
+
+If you are in doubt about this solution, consider it this way. Because of the nature of binary search trees, the parent node must be larger than all left child nodes and smaller than all right child nodes. Then when the parent node needs to be deleted, it is bound to take out a node larger than the parent node to replace the parent node. This node must not exist in the left subtree, but must exist in the right subtree. Then you need to keep the parent node smaller than the right child node, then you can take out the smallest node in the right subtree to replace the parent node.
+
+
+```
+delect(v) {
+this.root = this._delect(this.root, v)
+}
+_delect(node, v) {
+if (!node) return null
+// The searched node is smaller than the current node, go to the left subtree to find
+if (node.value < v) {
+node.right = this._delect(node.right, v)
+} else if (node.value > v) {
+// The searched node is larger than the current node, go to the right subtree to find
+node.left = this._delect(node.left, v)
+} else {
+// Entering this condition indicates that the node has been found
+// First determine whether the node has one of the left and right subtrees
+// If yes, return the subtree, which is the same as `_delectMin`
+if (!node.left) return node.right
+if (!node.right) return node.left
+// Enter here, representing that the node has left and right subtrees
+// First take the successor node of the current node, that is, take the minimum value of the right subtree of the current node
+let min = this._getMin(node.right)
+// After taking the minimum value, delete the minimum value
+// Then assign the subtree after deleting the node to the minimum node
+min.right = this._delectMin(node.right)
+// left subtree does not move
+min.left = node.left
+node = min
+}
+// maintain size
+node.size = this._getSize(node.left) + this._getSize(node.right) + 1
+return node
+}
+``` 
+
+
 
 
 
