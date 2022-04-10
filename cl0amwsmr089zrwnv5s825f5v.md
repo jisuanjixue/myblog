@@ -645,6 +645,7 @@ node.end -= 1
 # and check
 
 ## concept
+
 Union search is a special tree structure used to deal with some disjoint merge and query problems. Each node in the structure has a parent node. If there is only one current node, then the parent node of the node points to itself.
 
 There are two important operations in this structure, namely:
