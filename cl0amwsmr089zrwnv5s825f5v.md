@@ -558,6 +558,153 @@ node.size = this._getSize(node.left) + this._getSize(node.right) + 1
 return node
 }
 ``` 
+# Trie
+
+## concept
+
+In computer science, a trie, also known as a prefix tree or dictionary tree, is an ordered tree used to hold associative arrays, the keys of which are usually strings.
+
+To put it simply, the role of this structure is mostly to facilitate the search for strings. The tree has the following characteristics
+
+- The root node represents an empty string, each node has N (if you search for English characters, there are 26) links, each link represents a character
+- Nodes do not store characters, only paths are stored, which is different from other tree structures
+- From the root node to any node, connecting the characters along the way is the string corresponding to the node
+
+
+![163e1d2f6cec3348.webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1649596777435/-JQQTadAc.webp)
+
+## accomplish
+In general, the implementation of Trie is much simpler than other tree structures, and the implementation takes searching for English characters as an example.
+
+
+```
+class TrieNode {
+constructor() {
+// Represents the number of times each character passes through the node
+this.path = 0
+// There are several strings representing the node
+this.end = 0
+// Link
+this.next = new Array(26).fill(null)
+}
+}
+class Trie {
+constructor() {
+// root node, representing the null character
+this.root = new TrieNode()
+}
+// insert string
+insert(str) {
+if (!str) return
+let node = this.root
+for (let i = 0; i < str.length; i++) {
+// Get the index corresponding to the character first
+let index = str[i].charCodeAt() - 'a'.charCodeAt()
+// If the index corresponds to no value, create it
+if (!node.next[index]) {
+node.next[index] = new TrieNode()
+}
+node.path += 1
+node = node.next[index]
+}
+node.end += 1
+}
+// search for the number of occurrences of the string
+search(str) {
+if (!str) return
+let node = this.root
+for (let i = 0; i < str.length; i++) {
+let index = str[i].charCodeAt() - 'a'.charCodeAt()
+// If the index corresponds to no value, it means there is no string to search for
+if (!node.next[index]) {
+return 0
+}
+node = node.next[index]
+}
+return node.end
+}
+// delete string
+delete(str) {
+if (!this.search(str)) return
+let node = this.root
+for (let i = 0; i < str.length; i++) {
+let index = str[i].charCodeAt() - 'a'.charCodeAt()
+// If the Path of the node corresponding to the index is 0, it represents the string passing through the node
+// already one, just delete it
+if (--node.next[index].path == 0) {
+node.next[index] = null
+return
+}
+node = node.next[index]
+}
+node.end -= 1
+}
+}
+``` 
+## and check
+
+# concept
+Union search is a special tree structure used to deal with some disjoint merge and query problems. Each node in the structure has a parent node. If there is only one current node, then the parent node of the node points to itself.
+
+There are two important operations in this structure, namely:
+
+- Find: Determines which subset the element belongs to. It can be used to determine whether two elements belong to the same subset.
+
+-Union: Combines two sub-sets into the same set.
+
+
+![163e45b56fd25172.webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1649597163594/kmSqV6WyA.webp)
+
+## accomplish
+
+```
+class DisjointSet {
+// initialize the sample
+constructor(count) {
+// When initialized, the parent node of each node is itself
+this.parent = new Array(count)
+// Used to record the depth of the tree to optimize the search complexity
+this.rank = new Array(count)
+for (let i = 0; i < count; i++) {
+this.parent[i] = i
+this.rank[i] = 1
+}
+}
+find(p) {
+// Find whether the parent node of the current node is yourself, if not, it means that it has not been found
+// Start the path compression optimization
+// Assume the parent node of the current node is A
+// Mount the current node to the parent node of node A to achieve the purpose of compression depth
+while (p != this.parent[p]) {
+this.parent[p] = this.parent[this.parent[p]]
+p = this.parent[p]
+}
+return p
+}
+isConnected(p, q) {
+return this.find(p) === this.find(q)
+}
+// merge
+union(p, q) {
+// find the parent node of the two numbers
+let i = this.find(p)
+let j = this.find(q)
+if (i === j) return
+// Determine the depth of the two trees, add the smaller depth to the tree with the larger depth
+// If the two trees have the same depth, it doesn't matter how to add
+if (this.rank[i] < this.rank[j]) {
+this.parent[i] = j
+} else if (this.rank[i] > this.rank[j]) {
+this.parent[j] = i
+} else {
+this.parent[i] = j
+this.rank[j] += 1
+}
+}
+}
+``` 
+
+
 
 
 
