@@ -705,6 +705,7 @@ this.rank[j] += 1
 }
 }
 ``` 
+
 # heap
 
 ## concept
@@ -732,7 +733,6 @@ The core idea of ​​shiftDown is to first swap the position of the root node 
 
 
 ![164009e58a5a21f8.webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1651278121181/T1N-yM6Vu.webp align="left")
-
 
 ```
 class MaxHeap {
