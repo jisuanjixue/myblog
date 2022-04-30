@@ -705,6 +705,89 @@ this.rank[j] += 1
 }
 }
 ``` 
+# heap
+
+## concept
+
+A heap is usually an array object that can be thought of as a tree.
+
+The realization of the heap is by constructing a binary heap, which is actually a kind of binary tree. This data structure has the following properties.
+
+- any node is less than (or greater than) all its children
+- A heap is always a complete tree. That is, except for the bottom layer, the nodes of other layers are filled with elements, and the bottom layer is filled from left to right.
+
+The heap with the largest root node is called the max heap or the big root heap, and the heap with the smallest root node is called the min heap or the small root heap.
+
+Priority queues can also be implemented with heaps, and the operation is exactly the same.
+
+## implement large root heap
+
+The left child index of each node of the heap is i * 2 + 1, the right is i * 2 + 2, and the parent node is (i - 1) /2.
+
+The heap has two core operations, shiftUp and shiftDown . The former is used to add elements and the latter is used to remove the root node.
+
+The core idea of ​​shiftUp is to compare the size of the node with the parent node all the way. If it is larger than the parent node, it will exchange positions with the parent node.
+
+The core idea of ​​shiftDown is to first swap the position of the root node and the end, and then remove the end element. Next, the loop judges the size of the parent node and the two child nodes. If the child node is large, swap the largest child node with the parent node.
+
+
+![164009e58a5a21f8.webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1651278121181/T1N-yM6Vu.webp align="left")
+
+
+```
+class MaxHeap {
+  constructor() {
+    this.heap = []
+  }
+  size() {
+    return this.heap.length
+  }
+  empty() {
+    return this.size() == 0
+  }
+  add(item) {
+    this.heap.push(item)
+    this._shiftUp(this.size() - 1)
+  }
+  removeMax() {
+    this._shiftDown(0)
+  }
+  getParentIndex(k) {
+    return parseInt((k - 1) / 2)
+  }
+  getLeftIndex(k) {
+    return k * 2 + 1
+  }
+  _shiftUp(k) {
+    // If the current node is larger than the parent node, swap
+    while (this.heap[k] > this.heap[this.getParentIndex(k)]) {
+      this._swap(k, this.getParentIndex(k))
+      // turn index into parent node
+      k = this.getParentIndex(k)
+    }
+  }
+  _shiftDown(k) {
+    // Swap the first and remove the end
+    this._swap(k, this.size() - 1)
+    this.heap.splice(this.size() - 1, 1)
+    // Determine whether the node has a left child, because of the characteristics of the binary heap, if there is a right, there must be a left
+    while (this.getLeftIndex(k) < this.size()) {
+      let j = this.getLeftIndex(k)
+      // Determine whether there is a right child, and whether the right child is greater than the left child
+      if (j + 1 < this.size() && this.heap[j + 1] > this.heap[j]) j++
+      // Determine whether the parent node is already larger than the child node
+      if (this.heap[k] >= this.heap[j]) break
+      this._swap(k, j)
+      k = j
+    }
+  }
+  _swap(left, right) {
+    let rightValue = this.heap[right]
+    this.heap[right] = this.heap[left]
+    this.heap[left] = rightValue
+  }
+}
+``` 
 
 
 
