@@ -61,6 +61,46 @@ function sum(a, b) {
 }
 
 ``` 
+# sort
+
+The following two functions are general functions that will be used in sorting, so i will not write them one by one 
+
+```
+function checkArray(array){
+   if (!array) return
+}
+
+function swap(array, left, right){
+    let rightValue = array[right]
+    array[right] = array[left]
+   array[left] = rightValue
+ }
+
+``` 
+## Bubble Sort
+
+The principle of bubble sort is as follows, starting from the first element, comparing the current element with the next index element. If the current element is large, then swap positions and repeat the operation until the last element is compared, then the last element is the largest number in the array. Repeat the above operations in the next round, but at this time the last element is already the maximum number, so there is no need to compare the last element, only the position of length - 2 needs to be compared.
+
+
+![162b895b452b306c.gif](https://cdn.hashnode.com/res/hashnode/image/upload/v1651754849831/lnqCt2daB.gif align="left")
+
+Below is the code that implements the algorithm
+
+```
+function bubble(array){
+   checkArray(array)
+  for(let i = array.length - 1; i > 0; i--){
+     // Traverse from 0 to `length - 1`
+   for (let j = 0; j < i; j++) {
+      if (array[j] > array[j + 1]) swap(array, j, j + 1)
+    }
+  }
+return array
+}
+``` 
+The number of operations of this algorithm is an arithmetic sequence n + (n - 1) + (n - 2) + 1 , after removing the constant term, the time complexity is O(n * n)
+
+
 
 
 
