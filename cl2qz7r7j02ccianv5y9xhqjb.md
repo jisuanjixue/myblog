@@ -100,7 +100,7 @@ return array
 ``` 
 The number of operations of this algorithm is an arithmetic sequence n + (n - 1) + (n - 2) + 1 , after removing the constant term, the time complexity is O(n * n)
 
-# selection sort
+## selection sort
 
 The principle of selection sort is as follows. Traverse the array and set the index of the minimum value to 0. If the retrieved value is smaller than the current minimum value, replace the minimum value index. After the traversal is complete, swap the first element with the value on the minimum value index. After the above operation, the first element is the minimum value in the array, and the next traversal can start from index 1 and repeat the above operation.
 
@@ -123,6 +123,25 @@ function selection(array) {
 
 ``` 
 The number of operations of the algorithm is an arithmetic sequence n + (n - 1) + (n - 2) + 1 , after removing the constant term, the time complexity is O(n * n)
+
+## Insertion sort
+
+
+![162b895c7e59dcd1.gif](https://cdn.hashnode.com/res/hashnode/image/upload/v1651966748126/-Q1q_ixE2.gif align="left")
+
+Below is the code that implements the algorithm
+
+```
+function insertion(array) {
+  checkArray(array);
+  for (let i = 1; i < array.length; i++) {
+    for (let j = i - 1; j >= 0 && array[j] > array[j + 1]; j--)
+      swap(array, j, j + 1);
+  }
+  return array;
+}
+``` 
+The number of operations of this algorithm is an arithmetic sequence n + (n - 1) + (n - 2) + 1 , after removing the constant term, the time complexity is O(n * n)
 
 
 
