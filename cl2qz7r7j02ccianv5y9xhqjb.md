@@ -143,6 +143,71 @@ function insertion(array) {
 ``` 
 The number of operations of this algorithm is an arithmetic sequence n + (n - 1) + (n - 2) + 1 , after removing the constant term, the time complexity is O(n * n)
 
+##  merge sort
+
+The principle of merge sort is as follows. Recursively divide the arrays in pairs until they contain at most two elements, then sort and merge the arrays, finally merging into a sorted array. Suppose I have a set of arrays [3, 1, 2, 8, 9, 7, 6], the middle index is 3, sort the array [3, 1, 2, 8] first. On this left array, continue splitting until the array contains two elements (if the array length is odd, there will be a split array containing only one element). Then sort the arrays [3, 1] and [2, 8], then sort the arrays [1, 3, 2, 8], so that the left array is sorted, then sort the right array according to the above ideas, and finally put the array [1, 2, 3, 8] and [6, 7, 9] sort.
+
+![162be13c7e30bd86.gif](https://cdn.hashnode.com/res/hashnode/image/upload/v1652100192854/0q0MkfI-s.gif align="left")
+
+Below is the code that implements the algorithm
+
+```
+function sort(array) {
+  checkArray(array);
+  mergeSort(array, 0, array.length - 1);
+  return array;
+}
+
+function mergeSort(array, left, right) {
+  // The left and right indexes are the same, indicating that there is already only one number
+  if (left === right) return;
+  // Equivalent to `left + (right - left) / 2`
+  // Safer than `(left + right) / 2`, no overflow
+  // Use bitwise operations because bitwise operations are faster than arithmetic
+  let mid = parseInt(left + ((right - left) >> 1));
+  mergeSort(array, left, mid);
+  mergeSort(array, mid + 1, right);
+
+  let help = [];
+  let i = 0;
+  let p1 = left;
+  let p2 = mid + 1;
+  while (p1 <= mid && p2 <= right) {
+    help[i++] = array[p1] < array[p2] ? array[p1++] : array[p2++];
+  }
+  while (p1 <= mid) {
+    help[i++] = array[p1++];
+  }
+  while (p2 <= right) {
+    help[i++] = array[p2++];
+  }
+  for (let i = 0; i < help.length; i++) {
+    array[left + i] = help[i];
+  }
+  return array;
+}
+``` 
+The above algorithm uses the idea of ​​recursion. The essence of recursion is to push the stack. Every time a function is executed recursively, the information of the function (such as parameters, internal variables, and the number of lines executed) is pushed onto the stack until it encounters a termination condition, and then pops the stack and continues to execute the function. The call trace for the above recursive function is as follows
+
+```
+mergeSort(data, 0, 6) // mid = 3
+  mergeSort(data, 0, 3) // mid = 1
+    mergeSort(data, 0, 1) // mid = 0
+      mergeSort(data, 0, 0) // When terminated, go back to the previous step
+    mergeSort(data, 1, 1) // When terminated, go back to the previous step
+    // Sort p1 = 0, p2 = mid + 1 = 1
+    // fall back to `mergeSort(data, 0, 3)` to perform the next recursion
+  mergeSort(2, 3) // mid = 2
+    mergeSort(3, 3) // When terminated, go back to the previous step
+  // Sort p1 = 2, p2 = mid + 1 = 3
+  // Fallback to `mergeSort(data, 0, 3)` to perform merge logic
+  // Sort p1 = 0, p2 = mid + 1 = 2
+  // rollback after execution
+  // The array on the left is sorted, and the right side is also the same as the above trajectory
+
+``` 
+The number of operations of the algorithm can be calculated as follows: recurse twice, each time the amount of data is half of the array, and finally iterate the entire array once, so the expression 2T(N / 2) + T(N) ( T stands for time, and N stands for data volume). According to the expression, the formula can be applied to get the time complexity of O(N * logN)
+
 
 
 
