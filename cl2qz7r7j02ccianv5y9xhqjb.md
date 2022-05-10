@@ -190,20 +190,15 @@ function mergeSort(array, left, right) {
 The above algorithm uses the idea of ​​recursion. The essence of recursion is to push the stack. Every time a function is executed recursively, the information of the function (such as parameters, internal variables, and the number of lines executed) is pushed onto the stack until it encounters a termination condition, and then pops the stack and continues to execute the function. The call trace for the above recursive function is as follows
 
 ```
-mergeSort(data, 0, 6) // mid = 3
-  mergeSort(data, 0, 3) // mid = 1
-    mergeSort(data, 0, 1) // mid = 0
-      mergeSort(data, 0, 0) // When terminated, go back to the previous step
-    mergeSort(data, 1, 1) // When terminated, go back to the previous step
-    // Sort p1 = 0, p2 = mid + 1 = 1
-    // fall back to `mergeSort(data, 0, 3)` to perform the next recursion
-  mergeSort(2, 3) // mid = 2
-    mergeSort(3, 3) // When terminated, go back to the previous step
-  // Sort p1 = 2, p2 = mid + 1 = 3
-  // Fallback to `mergeSort(data, 0, 3)` to perform merge logic
-  // Sort p1 = 0, p2 = mid + 1 = 2
-  // rollback after execution
-  // The array on the left is sorted, and the right side is also the same as the above trajectory
+mergeSort(data, 0, 6)   // mid = 3
+mergeSort(data, 0, 3) // mid = 1
+mergeSort(data, 0, 1) // mid = 0
+mergeSort(data, 0, 0) // When terminated, go back to the previous step
+mergeSort(data, 1, 1) // When terminated, go back to the previous step
+    // Sort p1 = 0, p2 = mid + 1 = 1, fall back to mergeSort(data, 0, 3) to perform the next recursion
+mergeSort(2, 3) // mid = 2
+mergeSort(3, 3) // When terminated, go back to the previous step
+  // Sort p1 = 2, p2 = mid + 1 = 3 Fallback to mergeSort(data, 0, 3) to perform merge logic, Sort p1 = 0, p2 = mid + 1 = 2,  rollback after execution, The array on the left is sorted, and the right side is also the same as the above trajectory
 
 ``` 
 The number of operations of the algorithm can be calculated as follows: recurse twice, each time the amount of data is half of the array, and finally iterate the entire array once, so the expression 2T(N / 2) + T(N) ( T stands for time, and N stands for data volume). According to the expression, the formula can be applied to get the time complexity of O(N * logN)
