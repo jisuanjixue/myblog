@@ -208,6 +208,58 @@ mergeSort(data, 0, 6) // mid = 3
 ``` 
 The number of operations of the algorithm can be calculated as follows: recurse twice, each time the amount of data is half of the array, and finally iterate the entire array once, so the expression 2T(N / 2) + T(N) ( T stands for time, and N stands for data volume). According to the expression, the formula can be applied to get the time complexity of O(N * logN)
 
+## Quick row
+
+The principle of quicksort is as follows. Randomly select a value in an array as the reference value, and compare the value with the reference value from left to right. Put the value smaller than the reference value on the left of the array, and put the larger value on the right. After the comparison is completed, the reference value and the first value larger than the reference value are exchanged. Then, the array is divided into two parts by the position of the reference value, and the above operation is continued recursively.
+
+
+![162cd23e69ca9ea3.gif](https://cdn.hashnode.com/res/hashnode/image/upload/v1652187576292/2E-4y_C_u.gif align="left")
+
+Below is the code that implements the algorithm
+
+```
+function sort(array) {
+  checkArray(array);
+  quickSort(array, 0, array.length - 1);
+  return array;
+}
+
+function quickSort(array, left, right) {
+  if (left < right) {
+    swap(array, , right 
+// Randomly take the value, and then swap it with the end, which is slightly less complicated than taking a fixed position
+    let indexs = part(array, parseInt(Math.random() * (right - left + 1)) + left, right);
+    quickSort(array, left, indexs[0]);
+    quickSort(array, indexs[1] + 1, right);
+  }
+}
+function part(array, left, right) {
+  let less = left - 1;
+  let more = right;
+  while (left < more) {
+    if (array[left] < array[right]) {
+      // The current value is less than the base value, and both `less` and `left` are increased by one
+	   ++less;
+       ++left;
+    } else if (array[left] > array[right]) {
+      // The current value is greater than the reference value, and the current value is exchanged with the value on the right
+      // And do not change `left`, because the current value has not been judged for size
+      swap(array, --more, left);
+    } else {
+      // The same as the base value, only the subscript is moved
+      left++;
+    }
+  }
+  // Swap the base value with the first value greater than the base value
+  // This way the array becomes `[smaller than base value, base value, bigger than base value]`
+  swap(array, right, more);
+  return [less, more];
+}
+``` 
+
+The complexity of the algorithm is the same as merge sort, but the additional space complexity is less than merge sort, only O(logN), and it takes less constant time than merge sort.
+
+
 
 
 
