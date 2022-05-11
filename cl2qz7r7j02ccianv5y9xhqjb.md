@@ -254,6 +254,33 @@ function part(array, left, right) {
 
 The complexity of the algorithm is the same as merge sort, but the additional space complexity is less than merge sort, only O(logN), and it takes less constant time than merge sort.
 
+# interview questions
+
+Sort Colors: This question comes from LeetCode, the title requires us to sort [2,0,2,1,1,0] into [0,0,1,1,2,2], this problem can use three-way quicksort thought of.
+
+The following is the code implementation
+
+
+```
+const  sortColors = function(nums) {
+  let left = -1;
+  let right = nums.length;
+  let i = 0;
+  // If the subscript encounters right, it means that the sorting has been completed
+  while (i < right) {
+    if (nums[i] == 0) {
+      swap(nums, i++, ++left);
+    } else if (nums[i] == 1) {
+      i++;
+    } else {
+      swap(nums, i, --right);
+    }
+  }
+};
+
+``` 
+
+
 
 
 
